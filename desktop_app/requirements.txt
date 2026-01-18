@@ -4,3 +4,5 @@ scikit-learn==1.8.0
 joblib
 openai
 python-dotenv
+## for making the app
+pyinstaller

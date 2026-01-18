@@ -1,5 +1,5 @@
 import json
-from pathlib import Path
+from utils.path_helper import resource_path
 from services.openai_client import run_openai_json_prompt
 
 PROMPTS = {
@@ -8,11 +8,10 @@ PROMPTS = {
 }
 
 def remove_bias(text: str, mode: str) -> dict:
-    prompt = Path(PROMPTS[mode]).read_text(encoding="utf-8")
+    prompt_path = resource_path(PROMPTS[mode])
+    raw_output = run_openai_json_prompt(
+        prompt_path.read_text(encoding="utf-8"),
+        text,
+    )
 
-    raw_output = run_openai_json_prompt(prompt, text)
-
-    try:
-        return json.loads(raw_output)
-    except json.JSONDecodeError:
-        raise RuntimeError("LLM did not return valid JSON")
+    return json.loads(raw_output)
