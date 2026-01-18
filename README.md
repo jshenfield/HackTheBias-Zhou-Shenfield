@@ -153,24 +153,6 @@ resumes/
 
 ---
 
-## 📁 Repository Structure
-
-```
-HackTheBias-Zhou-Shenfield/
-├─ frontend/            # Next.js web app
-├─ backend/             # FastAPI backend
-├─ desktop_app/         # PyQt5 desktop app
-│  ├─ main.py
-│  ├─ ui.py
-│  ├─ workers/
-│  ├─ services/
-│  ├─ model/
-│  └─ prompts/
-└─ README.md
-```
-
----
-
 ## 🚀 Running the Project
 
 ### Web App (Development)
