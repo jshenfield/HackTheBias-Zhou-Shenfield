@@ -1,0 +1,6 @@
+PyQt5
+pdfplumber
+scikit-learn==1.8.0
+joblib
+openai
+python-dotenv
