@@ -130,7 +130,7 @@ export default function Home() {
           </section>
 
           {/* RIGHT: Results */}
-          <section className="rounded-2xl bg-white border shadow p-6 h-[60vh] overflow-hidden">
+          <section className="rounded-2xl bg-white border shadow p-6 h-[70vh] overflow-hidden">
             <div className="h-full overflow-y-auto">
               <ResultState step={step} result={result} />
             </div>
