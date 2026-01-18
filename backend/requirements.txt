@@ -1,15 +1,20 @@
-# --- Web API ---
+# --- Web framework ---
 fastapi
-uvicorn[standard]
+uvicorn
+
+# --- File upload ---
 python-multipart
 
-# --- Machine Learning ---
-scikit-learn
+# --- Machine learning (resume classifier) ---
+scikit-learn==1.8.0
 joblib
-numpy
 
-# --- PDF Processing ---
+# --- PDF text extraction ---
 pdfplumber
 
-# --- Utilities ---
-pydantic
+# --- LLM integration ---
+openai
+
+
+
+python-dotenv

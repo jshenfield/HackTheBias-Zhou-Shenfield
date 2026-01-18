@@ -1,12 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import {
+  ifNoise,
+  removeNameAndGeo,
+} from "@/lib/api/client";
 
-export default function TestIfNoisePage() {
+import { AnonymizedResult } from "@/lib/api/types";
+
+export default function TestRemoveNameAndGeoPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<AnonymizedResult | null>(null);
 
   async function handleTest() {
     if (!file) return;
@@ -16,25 +22,24 @@ export default function TestIfNoisePage() {
     setResult(null);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      // 1️⃣ Call if-noise
+      const noiseResult = await ifNoise(file);
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/if-noise`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Request failed");
+      if (!noiseResult.isResume) {
+        setError("This document is classified as noise (not a resume).");
+        setLoading(false);
+        return;
       }
 
-      const data = await res.json();
-      setResult(data);
+      // 2️⃣ Call remove-name-and-geo with extracted text
+      const anonymized = await removeNameAndGeo(
+        noiseResult.text
+      );
+
+      setResult(anonymized);
     } catch (err) {
-      setError("Failed to call backend");
+      console.error(err);
+      setError("Failed to process resume.");
     } finally {
       setLoading(false);
     }
@@ -42,9 +47,9 @@ export default function TestIfNoisePage() {
 
   return (
     <main className="min-h-screen bg-neutral-50 flex items-center justify-center px-6">
-      <div className="w-full max-w-xl bg-white border rounded-xl p-6 shadow">
+      <div className="w-full max-w-3xl bg-white border rounded-xl p-6 shadow">
         <h1 className="text-2xl font-bold mb-4">
-          Test /api/if-noise
+          Test: remove-name-and-geo
         </h1>
 
         {/* File upload */}
@@ -64,7 +69,9 @@ export default function TestIfNoisePage() {
           className="w-full bg-neutral-900 text-white py-2 rounded-lg
             hover:bg-neutral-800 disabled:opacity-50"
         >
-          {loading ? "Testing..." : "Test if-noise API"}
+          {loading
+            ? "Processing..."
+            : "Test remove-name-and-geo"}
         </button>
 
         {/* Error */}
@@ -76,13 +83,55 @@ export default function TestIfNoisePage() {
 
         {/* Result */}
         {result && (
-          <div className="mt-4 rounded-lg bg-neutral-100 p-4 text-sm">
-            <pre className="whitespace-pre-wrap">
-              {JSON.stringify(result, null, 2)}
-            </pre>
+          <div className="mt-6 space-y-4">
+            <h2 className="font-semibold text-lg">
+              Anonymized Output
+            </h2>
+
+            {/* Education */}
+            <Section title="Education">
+              <pre className="whitespace-pre-wrap text-sm">
+                {JSON.stringify(result.Education, null, 2)}
+              </pre>
+            </Section>
+
+            {/* Work Experience */}
+            <Section title="Work Experience">
+              <pre className="whitespace-pre-wrap text-sm">
+                {JSON.stringify(
+                  result.WorkExperience,
+                  null,
+                  2
+                )}
+              </pre>
+            </Section>
+
+            {/* Skills */}
+            <Section title="Skills">
+              <pre className="whitespace-pre-wrap text-sm">
+                {JSON.stringify(result.Skills, null, 2)}
+              </pre>
+            </Section>
           </div>
         )}
       </div>
     </main>
+  );
+}
+
+/* ---------------- Helper ---------------- */
+
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-lg border bg-neutral-50 p-4">
+      <h3 className="font-medium mb-2">{title}</h3>
+      {children}
+    </div>
   );
 }
