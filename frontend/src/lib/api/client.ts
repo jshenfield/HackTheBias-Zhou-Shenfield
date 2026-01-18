@@ -1,6 +1,5 @@
 // lib/api/client.ts
-// Frontend API client for HushHire
-// Talks directly to FastAPI backend
+// Single source of truth for backend calls
 
 import {
   NoiseResponse,
@@ -10,15 +9,7 @@ import {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE!;
 
-/* ------------------------------------------------------------------ */
-/* Helpers                                                            */
-/* ------------------------------------------------------------------ */
-
-function buildFormData(file: File): FormData {
-  const formData = new FormData();
-  formData.append("file", file);
-  return formData;
-}
+/* ---------------- Helpers ---------------- */
 
 async function handleJSON<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -28,56 +19,48 @@ async function handleJSON<T>(res: Response): Promise<T> {
   return res.json();
 }
 
-/* ------------------------------------------------------------------ */
-/* API 1: Noise Detection + Text Extraction                            */
-/* POST /api/if-noise                                                  */
-/* ------------------------------------------------------------------ */
+/* ---------------- APIs ---------------- */
 
 export async function ifNoise(
   file: File
 ): Promise<NoiseResponse> {
+  const formData = new FormData();
+  formData.append("file", file);
+
   const res = await fetch(`${API_BASE}/api/if-noise`, {
     method: "POST",
-    body: buildFormData(file),
+    body: formData,
   });
 
   return handleJSON<NoiseResponse>(res);
 }
 
-/* ------------------------------------------------------------------ */
-/* API 2: Remove Name + Geo Bias                                       */
-/* POST /api/remove-name-and-geo                                       */
-/* ------------------------------------------------------------------ */
-
 export async function removeNameAndGeo(
   text: string
 ): Promise<AnonymizedResult> {
-  const res = await fetch(`${API_BASE}/api/remove-name-and-geo`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ text }),
-  });
+  const res = await fetch(
+    `${API_BASE}/api/remove-name-and-geo`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    }
+  );
 
   return handleJSON<AnonymizedResult>(res);
 }
 
-/* ------------------------------------------------------------------ */
-/* API 3: Remove All Bias (Bias-Free Summary)                          */
-/* POST /api/remove-all-bias                                           */
-/* ------------------------------------------------------------------ */
-
 export async function removeAllBias(
   text: string
 ): Promise<BiasFreeSummary> {
-  const res = await fetch(`${API_BASE}/api/remove-all-bias`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ text }),
-  });
+  const res = await fetch(
+    `${API_BASE}/api/remove-all-bias`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    }
+  );
 
   return handleJSON<BiasFreeSummary>(res);
 }

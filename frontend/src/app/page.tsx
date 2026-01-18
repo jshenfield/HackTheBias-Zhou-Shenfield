@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+
 import ProgressPipeline from "@/components/ProgressPipeline";
 import OptionsPanel from "@/components/OptionsPanel";
-import ResultPanel from "@/components/ResultPanel";
+import ResultPanel from "@/components/ResultState";
 
 import {
   ifNoise,
@@ -15,6 +16,7 @@ import {
   AnonymizedResult,
   BiasFreeSummary,
 } from "@/lib/api/types";
+import ResultState from "@/components/ResultState";
 
 type Mode = "partial" | "full";
 type Step =
@@ -29,6 +31,7 @@ export default function Home() {
   const [mode, setMode] = useState<Mode>("partial");
   const [filterNoise, setFilterNoise] = useState(true);
   const [step, setStep] = useState<Step>("idle");
+  const [error, setError] = useState<string | null>(null);
 
   const [result, setResult] = useState<
     AnonymizedResult | BiasFreeSummary | null
@@ -37,104 +40,107 @@ export default function Home() {
   async function handleSubmit() {
     if (!file) return;
 
+    setError(null);
     setResult(null);
     setStep("checking-noise");
 
     try {
-      // 1️⃣ Noise detection + text extraction
-      const noise = await ifNoise(file);
+      // 1️⃣ Resume detection
+      const noiseResult = await ifNoise(file);
 
-      if (filterNoise && !noise.isResume) {
+      if (filterNoise && !noiseResult.isResume) {
         setStep("noise-failed");
         return;
       }
 
-      // 2️⃣ Bias removal
+      // 2️⃣ Bias handling
       setStep("processing-bias");
 
-      if (mode === "partial") {
-        const anonymized = await removeNameAndGeo(noise.text);
-        setResult(anonymized);
-      } else {
-        const summary = await removeAllBias(noise.text);
-        setResult(summary);
-      }
+      const output =
+        mode === "partial"
+          ? await removeNameAndGeo(noiseResult.text)
+          : await removeAllBias(noiseResult.text);
 
+      setResult(output);
       setStep("done");
     } catch (err) {
       console.error(err);
+      setError("Something went wrong. Please try again.");
       setStep("idle");
     }
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center px-6">
-      <div className="w-full max-w-3xl rounded-2xl bg-white shadow-lg border p-8">
+    <main className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 px-6 py-10">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
-
-
-        <div>
-
+        <header className="flex flex-col items-center text-center gap-3 mb-10">
           <img
             src="/hushhire-logo.png"
             alt="HushHire logo"
-            className="h-32 w-70"
+            className="h-24"
           />
-          <p className="text-neutral-600 rounded-4xl ml-5">
+          <p className="text-neutral-600">
             Filter the noise. Silence the bias.
           </p>
-        </div>
+        </header>
 
+        {/* Workspace */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* LEFT: Controls */}
+          <section className="rounded-2xl bg-white border shadow p-6 space-y-6">
+            <ProgressPipeline step={step} />
 
-        {/* Progress (always visible) */}
-        <div className="mt-8">
-          <ProgressPipeline step={step} />
-        </div>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(e) =>
+                setFile(e.target.files?.[0] || null)
+              }
+              className="block w-full text-sm
+            file:rounded-lg file:border
+            file:px-4 file:py-2
+            file:bg-neutral-900 file:text-white
+            hover:file:bg-neutral-800"
+            />
 
-        {/* Upload */}
-        <div className="mt-8">
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={(e) =>
-              setFile(e.target.files?.[0] || null)
-            }
-            className="block w-full text-sm
-              file:rounded-lg file:border
-              file:px-4 file:py-2
-              file:bg-neutral-900 file:text-white
-              hover:file:bg-neutral-800"
-          />
-        </div>
+            <OptionsPanel
+              filterNoise={filterNoise}
+              setFilterNoise={setFilterNoise}
+              mode={mode}
+              setMode={setMode}
+            />
 
-        {/* Options */}
-        <div className="mt-6">
-          <OptionsPanel
-            filterNoise={filterNoise}
-            setFilterNoise={setFilterNoise}
-            mode={mode}
-            setMode={setMode}
-          />
-        </div>
-
-        {/* CTA */}
-        <button
-          onClick={handleSubmit}
-          disabled={
-            !file ||
-            step === "checking-noise" ||
-            step === "processing-bias"
-          }
-          className="mt-8 w-full rounded-xl bg-neutral-900 py-3
+            <button
+              onClick={handleSubmit}
+              disabled={
+                !file ||
+                step === "checking-noise" ||
+                step === "processing-bias"
+              }
+              className="w-full rounded-xl bg-neutral-900 py-3
             text-white font-semibold hover:bg-neutral-800
             disabled:opacity-50"
-        >
-          Process Resume
-        </button>
+            >
+              Process Resume
+            </button>
 
-        {/* Results */}
-        <ResultPanel result={result} />
+            {error && (
+              <p className="text-sm text-red-600">
+                {error}
+              </p>
+            )}
+          </section>
+
+          {/* RIGHT: Results */}
+          <section className="rounded-2xl bg-white border shadow p-6 h-[60vh] overflow-hidden">
+            <div className="h-full overflow-y-auto">
+              <ResultState step={step} result={result} />
+            </div>
+          </section>
+        </div>
       </div>
     </main>
+
   );
 }

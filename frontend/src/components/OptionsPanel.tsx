@@ -31,7 +31,7 @@ export default function OptionsPanel({
             checked={mode === "partial"}
             onChange={() => setMode("partial")}
           />
-          Remove name & location (PDF)
+          Remove name & Geo location 
         </label>
 
         <label className="flex items-center gap-2">
@@ -40,7 +40,7 @@ export default function OptionsPanel({
             checked={mode === "full"}
             onChange={() => setMode("full")}
           />
-          Remove all bias (summary)
+          Remove all bias (Ai Summary)
         </label>
       </div>
     </div>
