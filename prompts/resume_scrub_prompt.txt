@@ -1,4 +1,6 @@
-You are given resume(s) as strings.
+You are given resume(s) as strings or pdfs. 
+
+If the resume is in pdf format, first you should convert it to string, and then follow the steps below.
 
 Resumes may vary in format and structure.
 
