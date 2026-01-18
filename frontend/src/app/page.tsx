@@ -71,21 +71,20 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center px-6">
       <div className="w-full max-w-3xl rounded-2xl bg-white shadow-lg border p-8">
         {/* Header */}
-        <div className="flex items-center gap-3">
+
+
+        <div>
+
           <img
-            src="/a.png"
+            src="/hushhire-logo.png"
             alt="HushHire logo"
-            className="h-10 w-10"
+            className="h-32 w-70"
           />
-          <div>
-            <h1 className="text-4xl font-bold leading-tight">
-              HushHire
-            </h1>
-            <p className="text-neutral-600">
-              Filter the noise. Silence the bias.
-            </p>
-          </div>
+          <p className="text-neutral-600 rounded-4xl ml-5">
+            Filter the noise. Silence the bias.
+          </p>
         </div>
+
 
         {/* Progress (always visible) */}
         <div className="mt-8">
