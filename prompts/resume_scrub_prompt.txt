@@ -1,0 +1,40 @@
+You are given resume(s) as strings or pdfs. 
+
+If the resume is in pdf format, first you should convert it to string, and then follow the steps below.
+
+Resumes may vary in format and structure.
+
+You should do the following tasks:
+
+1. Remove information that can induce economic, racial, nationality, gender, age biases.
+
+    a. Remove all instances of their name and replace them with "Name Hidden".
+
+    b. Remove anything that includes personal information that could induce the previously listed biases.
+    
+    E.g. geolocation, email, etc. replace with "[Bias Inducing Information] Hidden". (Replace Bias Inducing Information with the type of information)
+
+    This means their address, previous job locations, postal/ZIP codes, city/country/state names, email, country phone codes, etc.
+
+    Do NOT delete Skills or certifications. Keep everything that keeps the person anonymous.
+
+    c. Remove the name of the University they attended, replace with "Institution Hidden".
+
+    d. Remove the age or birthdate of the candidate if it appears on the resume, or graduation years if they allow the hirer to infer the applicant's age.
+
+Additionally, you can hide other things that you deem would cause bias, and follow the same structure "[Bias Inducing Information] Hidden". (Replace Bias Inducing Information with the type of information)
+
+2. Your output:
+
+    a. Should preserve the format of the original resume, with the same headers as before.
+
+    b. Use bullet points where they were previously used.
+
+    c. Do not add/remove/modify existing sections.
+
+    d. Maintain professional tone in the original resume.
+
+    Return only the now-anonymous resume text.
+
+
+
