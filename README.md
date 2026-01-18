@@ -233,11 +233,10 @@ HushHire:
 
 ## 📌 Future Improvements
 
-* PDF/HTML report generation
-* Side-by-side before/after comparison
-* Explainability metadata (what was removed)
-* Offline summarization fallback
-* macOS `.app` build
+* Automatically filtering out resumes that clearly do not match the job requirements.
+* More options to choice the exact feature to "slience".
+* Build a universal API that allows companies to integrate with their resume collection systems. Resumes will be processed and standardized before reaching recruiters.
+* Expanding the current functionalities to apply to cover letters
 
 ---
 
