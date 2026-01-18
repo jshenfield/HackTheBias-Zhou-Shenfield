@@ -1,0 +1,89 @@
+############################
+# OS / Editor
+############################
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+*.log
+
+############################
+# Environment Variables
+############################
+.env
+.env.*
+!.env.example
+
+############################
+# Node / Frontend
+############################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+.next/
+dist/
+build/
+out/
+coverage/
+.turbo/
+.vercel/
+
+############################
+# Python / Backend
+############################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+ruff_cache/
+coverage.xml
+htmlcov/
+
+############################
+# ML / Jupyter
+############################
+.ipynb_checkpoints/
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+*.onnx
+*.ckpt
+
+
+
+############################
+# Docker
+############################
+docker-compose.override.yml
+*.pid
+
+############################
+# Terraform / Infra
+############################
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+
+############################
+# Misc
+############################
+*.zip
+*.tar.gz
+*.tmp
+
+.DS_Store
