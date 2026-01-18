@@ -29,7 +29,6 @@ type Step =
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [mode, setMode] = useState<Mode>("partial");
-  const [filterNoise, setFilterNoise] = useState(true);
   const [step, setStep] = useState<Step>("idle");
   const [error, setError] = useState<string | null>(null);
 
@@ -48,7 +47,7 @@ export default function Home() {
       // 1️⃣ Resume detection
       const noiseResult = await ifNoise(file);
 
-      if (filterNoise && !noiseResult.isResume) {
+      if (!noiseResult.isResume) {
         setStep("noise-failed");
         return;
       }
@@ -105,8 +104,6 @@ export default function Home() {
             />
 
             <OptionsPanel
-              filterNoise={filterNoise}
-              setFilterNoise={setFilterNoise}
               mode={mode}
               setMode={setMode}
             />

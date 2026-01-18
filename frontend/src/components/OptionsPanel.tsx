@@ -1,37 +1,42 @@
 type Mode = "partial" | "full";
 
 interface Props {
-  filterNoise: boolean;
-  setFilterNoise: (v: boolean) => void;
   mode: Mode;
   setMode: (m: Mode) => void;
 }
 
 export default function OptionsPanel({
-  filterNoise,
-  setFilterNoise,
   mode,
   setMode,
 }: Props) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={filterNoise}
-          onChange={() => setFilterNoise(!filterNoise)}
-        />
-        Filter non-resume noise
-      </label>
+    <div className="space-y-4 text-sm">
+      {/* Noise filtering (mandatory, informational) */}
+      <div className="rounded-lg border bg-neutral-50 px-4 py-3 text-neutral-700">
+        <div className="font-medium">
+          Noise filtering
+        </div>
+        <p className="text-xs text-neutral-500 mt-1">
+          Non-resume documents are automatically filtered
+          before bias processing.
+        </p>
+      </div>
 
-      <div className="space-y-1">
+      {/* Mode selection */}
+      <div className="space-y-2">
+        <div className="font-medium">
+          Bias removal mode
+        </div>
+
         <label className="flex items-center gap-2">
           <input
             type="radio"
             checked={mode === "partial"}
             onChange={() => setMode("partial")}
           />
-          Remove name & Geo location 
+          <span>
+            Remove name & location bias
+          </span>
         </label>
 
         <label className="flex items-center gap-2">
@@ -40,7 +45,9 @@ export default function OptionsPanel({
             checked={mode === "full"}
             onChange={() => setMode("full")}
           />
-          Remove all bias (Ai Summary)
+          <span>
+            Remove all bias (AI-generated summary)
+          </span>
         </label>
       </div>
     </div>
