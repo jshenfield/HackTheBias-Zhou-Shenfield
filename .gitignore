@@ -56,7 +56,6 @@ htmlcov/
 ############################
 .ipynb_checkpoints/
 *.pkl
-*.joblib
 *.h5
 *.pt
 *.pth
