@@ -1,9 +1,15 @@
+# --- Web API ---
 fastapi
-uvicorn
-pandas
-numpy
+uvicorn[standard]
+python-multipart
+
+# --- Machine Learning ---
 scikit-learn
 joblib
-python-multipart
-supabase
-python-dotenv
+numpy
+
+# --- PDF Processing ---
+pdfplumber
+
+# --- Utilities ---
+pydantic
